@@ -4,7 +4,7 @@ import { compose, withHandlers } from "recompose";
 
 import SearchIcon from "@material-ui/icons/Search";
 
-import StarsSelect from "../StarsSelect";
+import StarsSelect from "../StarsSelect/StarsSelect";
 import Input from "../Input";
 
 const Filters = ({ filters, onStarsChange, onNameChange, onHasPoolChange }) => (

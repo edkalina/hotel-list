@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { compose, withProps, withStateHandlers } from "recompose";
+import { compose, withProps, withStateHandlers, withHandlers } from "recompose";
 
 import data from "../../data";
 
@@ -9,8 +9,9 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import HotelBox from "./HotelBox";
 import Filters from "./Filters";
+import { withUrlState } from "with-url-state";
 
-const SearchResultPage = ({ hotels, isFilterBarOpen, toggleFilterBar, filters, setFilterValue }) => (
+const SearchResultPage = ({ hotels, isFilterBarOpen, toggleFilterBar, filters, onFiltersChange }) => (
   <Container>
     <Header>
       <FiltersButton onClick={toggleFilterBar}>
@@ -25,7 +26,7 @@ const SearchResultPage = ({ hotels, isFilterBarOpen, toggleFilterBar, filters, s
             <CloseIcon fontSize="inherit" />
           </CloseButton>
         </SidebarTitle>
-        <Filters filters={filters} onChange={setFilterValue} />
+        <Filters filters={filters} onChange={onFiltersChange} />
       </Sidebar>
       <HotelList>
         {hotels.length === 0 && (
@@ -49,29 +50,34 @@ const filterByPool = (hasPool) => (hotels) =>
   hasPool ? hotels.filter(hotel => hotel.hasPool === "true") : hotels;
 
 const enhance = compose(
+  withUrlState(props => ({})),
+  withProps(({ urlState }) => ({
+    filters: {
+      stars: urlState.stars ? +urlState.stars : 1,
+      name: urlState.name || '',
+      hasPool: urlState.hasPool === 'true',
+    }
+  })),
   withStateHandlers(
     {
       isFilterBarOpen: false,
-      filters: {
-        stars: 1,
-        name: '',
-        hasPool: false,
-      },
     },
     {
       toggleFilterBar: ({ isFilterBarOpen }) => () => ({
         isFilterBarOpen: !isFilterBarOpen
       }),
-      setFilterValue: ({ filters }) => (key, value) => ({ filters: { ...filters, [key]: value } }),
     }
   ),
   withProps(({ filters }) => ({
     hotels: compose(
       filterByStars(filters.stars),
-      filterByName(filters.name),
+      filterByName(filters.name.toLowerCase()),
       filterByPool(filters.hasPool),
     )(data.hotels)
-  }))
+  })),
+  withHandlers({
+    onFiltersChange: ({ urlState, setUrlState }) => (update) => setUrlState({ ...urlState, ...update }),
+  }),
 );
 
 export default enhance(SearchResultPage);

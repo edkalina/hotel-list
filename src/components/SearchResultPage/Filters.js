@@ -32,9 +32,10 @@ const Filters = ({ filters, onStarsChange, onNameChange, onHasPoolChange }) => (
 
 const enhance = compose(
   withHandlers({
-    onStarsChange: ({ onChange }) => (stars) => onChange('stars', stars),
-    onNameChange: ({ onChange }) => (e) => onChange('name', e.target.value),
-    onHasPoolChange: ({ onChange }) => (e) => onChange('hasPool', e.target.checked),
+    onStarsChange: ({ onChange }) => (stars) => onChange({ stars }),
+    onNameChange:
+      ({ onChange }) => (e) => onChange({ name: e.target.value }),
+    onHasPoolChange: ({ onChange }) => (e) => onChange({ hasPool: e.target.checked }),
   })
 );
 

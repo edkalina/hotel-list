@@ -54,6 +54,11 @@ const StyledModal = styled(Modal)`
   justify-content: center;
   align-items: center;
   height: 100%;
+
+  @media (max-width: 767px) {
+    overflow: auto;
+    align-items: flex-start;
+  }
 `;
 
 const Container = styled.div`
@@ -75,7 +80,7 @@ const Container = styled.div`
   }
 
   @media (max-width: 767px) {
-    height: 100%;
+    min-height: 100%;
     width: 100%;
     max-width: unset;
     border: 0 none;

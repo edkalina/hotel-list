@@ -83,21 +83,6 @@ const Location = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-const PriceCol = styled.div`
-  flex: 0 1 auto;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  border-left: 1px solid #eaeaea;
-  padding: 0.75rem;
-
-  @media (max-width: 480px) {
-    flex: 1 0;
-  }
-`;
-
 const AdditionalContent = styled.div`
   flex: 0 1 auto;
 

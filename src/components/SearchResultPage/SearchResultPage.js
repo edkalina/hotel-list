@@ -4,22 +4,29 @@ import { compose, withProps, withStateHandlers } from "recompose";
 
 import data from "../../data";
 
-import TuneIcon from "@material-ui/icons/Tune";
+import FilterIcon from "@material-ui/icons/FilterList";
+import CloseIcon from "@material-ui/icons/Close";
 
 import HotelBox from "./HotelBox";
-import Sidebar from "./Sidebar";
+import Filters from "./Filters";
 
 const SearchResultPage = ({ hotels, isFilterBarOpen, toggleFilterBar }) => (
   <Container>
     <Header>
       <FiltersButton onClick={toggleFilterBar}>
-        <TuneIcon />
+        Filters <FilterIcon />
       </FiltersButton>
     </Header>
     <Content>
-      <SidebarContainer open={isFilterBarOpen}>
-        <Sidebar />
-      </SidebarContainer>
+      <Sidebar open={isFilterBarOpen}>
+        <SidebarTitle>
+          Filters
+          <CloseButton onClick={toggleFilterBar}>
+            <CloseIcon fontSize="inherit" />
+          </CloseButton>
+        </SidebarTitle>
+        <Filters />
+      </Sidebar>
       <HotelList>
         {hotels.map((hotel, index) => (
           <HotelBox key={index} hotel={hotel} />
@@ -58,7 +65,7 @@ const Content = styled.div`
 `;
 
 const Header = styled.div`
-  padding: 0.75rem;
+  padding: 0.75rem 0.75rem 0;
 
   @media (min-width: 1024px) {
     display: none;
@@ -70,25 +77,77 @@ const HotelList = styled.div`
 `;
 
 const FiltersButton = styled.button`
-  border: 0 none;
+  display: inline-flex;
+  align-items: center;
+  border: 2px solid #515355;
+  border-radius: 0.5rem;
   background: none transparent;
-  font-size: 2rem;
-  padding: 0;
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+
+  &:focus {
+    outline: 0 none;
+  }
+
+  &:hover {
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  }
+
+  svg {
+    margin-left: 0.25rem;
+  }
 `;
 
-const SidebarContainer = styled.div`
+const Sidebar = styled.div`
   flex: 0 0 15rem;
   margin-right: 1rem;
 
   @media (max-width: 1023px) {
-    display: ${p => (p.open ? "block" : "none")};
     position: absolute;
-    top: 0
-    left: 0;
+    top: 0;
+    right: 100%;
     bottom: 0;
+    margin-right: 0;
     padding: 1rem;
     background-color: #f7f8f9;
     border-right: 1px solid #e1e2e3;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3)
+    box-shadow: 0 0 ${p => (p.open ? "8px" : "0")} rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease-in;
+    transform: translateX(${p => (p.open ? "100%" : "0")});
+  }
+`;
+
+const SidebarTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+
+  border-bottom: 1px solid #eaeaea;
+  font-size: 1.5rem;
+  font-weight: bold;
+
+  @media (min-width: 1024px) {
+    display: none;
+  }
+`;
+
+const CloseButton = styled.button`
+  border: 0 none;
+  background: transparent none;
+  padding: 0;
+  cursor: pointer;
+
+  font-size: 1.5rem;
+
+  &:focus {
+    outline: 0 none;
+  }
+
+  svg {
+    display: block;
   }
 `;

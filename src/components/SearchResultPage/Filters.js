@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import SearchIcon from "@material-ui/icons/Search";
 
-import Stars from "../Stars";
+import StarsSelect from "../StarsSelect";
 import Input from "../Input";
 
 const Sidebar = ({ hotel }) => (
@@ -11,7 +11,7 @@ const Sidebar = ({ hotel }) => (
     <FilterBlock>
       <Title>Stars</Title>
       <StarsFilter>
-        <Stars filled={0} size={3} />
+        <StarsSelect value={1} size={3} onChange={val => console.log("star", val)} />
       </StarsFilter>
     </FilterBlock>
     <FilterBlock>

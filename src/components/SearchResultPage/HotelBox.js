@@ -1,11 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import { compose, withStateHandlers } from "recompose";
 
 import PlaceIcon from "@material-ui/icons/Place";
 
 import Stars from "../Stars";
+import DetailsModal from "./DetailsModal";
 
-const HotelBox = ({ hotel }) => (
+const HotelBox = ({ hotel, isDetailsOpen, showDetailsModal, closeDetailsModal }) => (
   <Container>
     <Content>
       <CoverCol>
@@ -22,12 +24,22 @@ const HotelBox = ({ hotel }) => (
     </Content>
     <AdditionalContent>
       <Price>${hotel.price.single}</Price>
-      <DetailsButton>Details</DetailsButton>
+      <DetailsButton onClick={showDetailsModal}>Details</DetailsButton>
     </AdditionalContent>
+    {isDetailsOpen && <DetailsModal hotel={hotel} onClose={closeDetailsModal} />}
   </Container>
 );
 
-export default HotelBox;
+const enhance = compose(
+  withStateHandlers({
+    isDetailsOpen: false,
+  }, {
+    showDetailsModal: () => (index) => ({ isDetailsOpen: true }),
+    closeDetailsModal: () => () => ({ isDetailsOpen: false }),
+  })
+);
+
+export default enhance(HotelBox);
 
 const Container = styled.div`
   display: flex;

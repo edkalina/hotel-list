@@ -8,6 +8,10 @@ const GlobalStyle = createGlobalStyle`
     color: #212223;
     padding: 0;
     margin: 0;
+
+    &.ReactModal__Body--open {
+      overflow: hidden;
+    }
   }
 `;
 

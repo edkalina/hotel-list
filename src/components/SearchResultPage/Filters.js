@@ -1,35 +1,44 @@
 import React from "react";
 import styled from "styled-components";
+import { compose, withHandlers } from "recompose";
 
 import SearchIcon from "@material-ui/icons/Search";
 
 import StarsSelect from "../StarsSelect";
 import Input from "../Input";
 
-const Sidebar = ({ hotel }) => (
+const Filters = ({ filters, onStarsChange, onNameChange, onHasPoolChange }) => (
   <React.Fragment>
     <FilterBlock>
       <Title>Stars</Title>
       <StarsFilter>
-        <StarsSelect value={1} size={3} onChange={val => console.log("star", val)} />
+        <StarsSelect value={filters.stars} size={3} onChange={onStarsChange} />
       </StarsFilter>
     </FilterBlock>
     <FilterBlock>
       <Title>Hotel Name</Title>
       <FilterContent>
-        <Input icon={SearchIcon} block />
+        <Input icon={SearchIcon} block value={filters.name} onChange={onNameChange} />
       </FilterContent>
     </FilterBlock>
     <FilterBlock>
       <Title>Features</Title>
       <FilterContent>
-        <input type="checkbox" /> Has pool
+        <input type="checkbox" checked={filters.hasPool} onChange={onHasPoolChange} /> Has pool
       </FilterContent>
     </FilterBlock>
   </React.Fragment>
 );
 
-export default Sidebar;
+const enhance = compose(
+  withHandlers({
+    onStarsChange: ({ onChange }) => (stars) => onChange('stars', stars),
+    onNameChange: ({ onChange }) => (e) => onChange('name', e.target.value),
+    onHasPoolChange: ({ onChange }) => (e) => onChange('hasPool', e.target.checked),
+  })
+);
+
+export default enhance(Filters);
 
 const FilterBlock = styled.div`
   margin-bottom: 1rem;

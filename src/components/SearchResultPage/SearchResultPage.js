@@ -10,7 +10,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import HotelBox from "./HotelBox";
 import Filters from "./Filters";
 
-const SearchResultPage = ({ hotels, isFilterBarOpen, toggleFilterBar }) => (
+const SearchResultPage = ({ hotels, isFilterBarOpen, toggleFilterBar, filters, setFilterValue }) => (
   <Container>
     <Header>
       <FiltersButton onClick={toggleFilterBar}>
@@ -25,9 +25,12 @@ const SearchResultPage = ({ hotels, isFilterBarOpen, toggleFilterBar }) => (
             <CloseIcon fontSize="inherit" />
           </CloseButton>
         </SidebarTitle>
-        <Filters />
+        <Filters filters={filters} onChange={setFilterValue} />
       </Sidebar>
       <HotelList>
+        {hotels.length === 0 && (
+          <EmptyMsg>No results</EmptyMsg>
+        )}
         {hotels.map((hotel, index) => (
           <HotelBox key={index} hotel={hotel} />
         ))}
@@ -36,19 +39,38 @@ const SearchResultPage = ({ hotels, isFilterBarOpen, toggleFilterBar }) => (
   </Container>
 );
 
+const filterByStars = (stars) => (hotels) =>
+  stars > 1 ? hotels.filter(hotel => +hotel.rate >= stars) : hotels;
+
+const filterByName = (nameSubstr) => (hotels) =>
+  nameSubstr.length > 0 ? hotels.filter(hotel => hotel.name.toLowerCase().indexOf(nameSubstr) >= 0) : hotels;
+
+const filterByPool = (hasPool) => (hotels) =>
+  hasPool ? hotels.filter(hotel => hotel.hasPool === "true") : hotels;
+
 const enhance = compose(
   withStateHandlers(
     {
-      isFilterBarOpen: false
+      isFilterBarOpen: false,
+      filters: {
+        stars: 1,
+        name: '',
+        hasPool: false,
+      },
     },
     {
       toggleFilterBar: ({ isFilterBarOpen }) => () => ({
         isFilterBarOpen: !isFilterBarOpen
-      })
+      }),
+      setFilterValue: ({ filters }) => (key, value) => ({ filters: { ...filters, [key]: value } }),
     }
   ),
-  withProps(() => ({
-    hotels: data.hotels
+  withProps(({ filters }) => ({
+    hotels: compose(
+      filterByStars(filters.stars),
+      filterByName(filters.name),
+      filterByPool(filters.hasPool),
+    )(data.hotels)
   }))
 );
 
@@ -57,6 +79,7 @@ export default enhance(SearchResultPage);
 const Container = styled.div`
   position: relative;
   background-color: #f7f8f9;
+  min-height: 100vh;
 `;
 
 const Content = styled.div`
@@ -74,6 +97,10 @@ const Header = styled.div`
 
 const HotelList = styled.div`
   flex: 1 1 auto;
+`;
+
+const EmptyMsg = styled.div`
+  text-align: center;
 `;
 
 const FiltersButton = styled.button`

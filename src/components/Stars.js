@@ -10,9 +10,9 @@ const Stars = ({ filled, size = "2" }) => (
   <Container style={{ fontSize: `${size}rem` }}>
     {range5.map(index =>
       index < filled ? (
-        <Star fontSize="inherit" />
+        <Star key={index} fontSize="inherit" />
       ) : (
-        <EmptyStar fontSize="inherit" />
+        <EmptyStar key={index} fontSize="inherit" />
       )
     )}
   </Container>

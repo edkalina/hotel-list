@@ -98,6 +98,7 @@ const AdditionalContent = styled.div`
     border-top: 1px solid #eaeaea;
 
     flex-direction: row-reverse;
+    align-items: center;
   }
 `;
 
